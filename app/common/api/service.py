@@ -2,6 +2,7 @@ import fastapi
 import uvicorn
 from facet import ServiceMixin
 from loguru import logger
+from fastapi.middleware.cors import CORSMiddleware
 
 from .uvicorn_server import UvicornServer
 
@@ -48,6 +49,13 @@ class BaseAPIService(ServiceMixin):
         """
 
         app = fastapi.FastAPI(title=self._title, version=self._version)
+        app.add_middleware(
+            CORSMiddleware,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+        app.service = self
         self.setup_app(app=app)
 
         return app
