@@ -791,7 +791,10 @@ files = [
 [package.extras]
 dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 
+[extras]
+sqlite = ["aiosqlite"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "8d69807df07fbb3f4f74792d579193e442deb76ed8e395ddc6bc391aafa0b1e4"
+content-hash = "9b3a00f414c1134f4d510b9d5cd5d5c856c06ec50d27035cd6c1e9ac9b10c762"
