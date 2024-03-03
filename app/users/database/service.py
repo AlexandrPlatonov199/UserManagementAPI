@@ -77,6 +77,17 @@ class Service(BaseDatabaseService):
         page: int = 1,
         per_page: int = 10,
     ) -> list[User]:
+        """
+        Get a list of users with pagination.
+
+         Args:
+             session: The SQLAlchemy session object.
+             page: The page number to retrieve (default is 1).
+            per_page: The number of users per page (default is 10).
+
+         Returns:
+             A list of User objects.
+         """
         query = select(User).order_by(User.registration_date.desc())
 
         offset = (page - 1) * per_page
@@ -90,6 +101,15 @@ class Service(BaseDatabaseService):
             self,
             session: AsyncSession,
     ) -> int:
+        """
+        Get the total number of users.
+
+        Args:
+            session: The SQLAlchemy session object.
+
+        Returns:
+            The total number of users.
+        """
         query = select(func.count(User.id)) # pylint: disable=not-callable
 
         result = await session.scalar(query)
