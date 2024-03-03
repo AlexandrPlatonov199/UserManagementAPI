@@ -122,6 +122,29 @@ async def get_users_top_five_longest(
     )
 
 
+async def get_email_domain_ratio(
+    request: fastapi.Request,
+) -> float:
+    """
+    Get the ratio of users with email addresses from a specific domain.
+
+    Args:
+        request: The FastAPI request object.
+
+    Returns:
+        A float representing the ratio of users with email addresses from the specified domain.
+    """
+    database_service: database.Service = request.app.service.database
+
+    async with database_service.transaction() as session:
+        users_db = await database_service.get_email_domain_ratio(
+            session=session,
+            domain="example.com"
+        )
+
+    return users_db
+
+
 async def create_user(
     request: fastapi.Request,
     data: UserCreateRequest = fastapi.Body(embed=False),

@@ -163,7 +163,38 @@ class Service(BaseDatabaseService):
         query = query.limit(per_page).offset(offset)
         result = await session.execute(query)
 
-        return list(result.unique().scalars().all())
+        return list(result.unique().scalars().all())\
+
+
+    async def get_email_domain_ratio(
+            self,
+            session: AsyncSession,
+            domain: str,
+    ) -> float:
+        """
+        Get the ratio of users with email addresses from a specific domain.
+
+        Args:
+            session: The SQLAlchemy session object.
+            domain: The domain to filter email addresses by.
+
+        Returns:
+            A float representing the ratio of users with email addresses from the specified domain,
+            rounded to two decimal places. If no users have email addresses from the specified domain,
+            returns 0.0.
+        """
+        subquery = (
+            select(func.count(User.id))
+            .where(User.email.like(f"%{domain}"))
+        )
+        total_users_subquery = select(func.count(User.id))
+        query = (
+            select(func.round((subquery.subquery().c.count / total_users_subquery.subquery().c.count) * 100, 2))
+        )
+        result = await session.execute(query)
+        ratio = result.scalar_one_or_none()
+
+        return ratio if ratio else 0.0
 
     async def update_user(
             self,
