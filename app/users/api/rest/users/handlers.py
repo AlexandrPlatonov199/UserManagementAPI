@@ -1,11 +1,12 @@
 import fastapi
 
+from app.common.api.dependencies.pagination import Pagination, pagination
 from app.users import database
 from app.users.api.rest.schemas import UserResponse
 from app.users.database.models import User
 
 from .dependencies import get_path_user
-from .schemas import UserUpdateRequest, UserCreateRequest
+from .schemas import UserUpdateRequest, UserCreateRequest, UserListResponse
 
 
 async def get_user(
@@ -20,6 +21,41 @@ async def get_user(
         A `UserResponse` object with the user's data.
     """
     return UserResponse.from_db_model(user)
+
+
+async def get_users(
+    request: fastapi.Request,
+    pagination: Pagination = fastapi.Depends(pagination),
+) -> UserListResponse:
+    """Retrieve a list of users.
+
+    Args:
+        request (fastapi.Request): The FastAPI request object.
+        pagination (Pagination, optional): The pagination settings. Defaults to fastapi.Depends(pagination).
+
+    Returns:
+        A `UserListResponse` object with a list of `UserResponse` objects, pagination details, and the total number of users.
+    """
+    database_service: database.Service = request.app.service.database
+
+    async with database_service.transaction() as session:
+        users_db = await database_service.get_users(
+            session=session,
+            page=pagination.page,
+            per_page=pagination.per_page,
+        )
+        total_projects = await database_service.get_user_count(session)
+
+    total_pages = -(total_projects // -pagination.per_page)
+    users = [UserResponse.model_validate(user_db) for user_db in users_db]
+
+    return UserListResponse(
+        data=users,
+        page=pagination.page,
+        per_page=pagination.per_page,
+        total_items=total_projects,
+        total_pages=total_pages,
+    )
 
 
 async def create_user(
