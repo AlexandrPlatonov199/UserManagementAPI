@@ -1,7 +1,8 @@
 import pathlib
 from typing import Type
 
-from sqlalchemy import select
+from pydantic import EmailStr
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.common.database.service import BaseDatabaseService
@@ -69,6 +70,31 @@ class Service(BaseDatabaseService):
         user = result.unique().scalar_one_or_none()
 
         return user
+
+    async def get_users(
+        self,
+        session: AsyncSession,
+        page: int = 1,
+        per_page: int = 10,
+    ) -> list[User]:
+        query = select(User).order_by(User.registration_date.desc())
+
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
+
+        result = await session.execute(query)
+
+        return list(result.unique().scalars().all())
+
+    async def get_user_count(
+            self,
+            session: AsyncSession,
+    ) -> int:
+        query = select(func.count(User.id)) # pylint: disable=not-callable
+
+        result = await session.scalar(query)
+
+        return result
 
     async def update_user(
             self,
