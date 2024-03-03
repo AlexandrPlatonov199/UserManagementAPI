@@ -116,6 +116,27 @@ class Service(BaseDatabaseService):
 
         return result
 
+    async def get_users_count_last_seven_days(
+            self,
+            session: AsyncSession,
+            seven_days_ago,
+    ) -> int:
+        """
+        Get the number of users who registered in the last seven days.
+
+        Args:
+            session: The SQLAlchemy session object.
+            seven_days_ago: A datetime object representing the date and time seven days ago.
+
+        Returns:
+            The number of users who registered in the last seven days.
+        """
+        stmt = select(func.count(User.id)).where(User.registration_date >= seven_days_ago)
+        result = await session.execute(stmt)
+        user_count = result.scalar_one()
+
+        return user_count
+
     async def update_user(
             self,
             session: AsyncSession,

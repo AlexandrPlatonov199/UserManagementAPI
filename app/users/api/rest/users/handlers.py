@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import fastapi
 
 from app.common.api.dependencies.pagination import Pagination, pagination
@@ -56,6 +58,30 @@ async def get_users(
         total_items=total_projects,
         total_pages=total_pages,
     )
+
+
+async def get_users_count_last_seven_days(
+    request: fastapi.Request,
+) -> int:
+    """
+    Get the number of users who registered in the last seven days.
+
+    Args:
+        request: The FastAPI request object.
+
+    Returns:
+        The number of users who registered in the last seven days.
+    """
+    database_service: database.Service = request.app.service.database
+
+    seven_days_ago = datetime.now() - timedelta(days=7)
+    async with database_service.transaction() as session:
+        users_db = await database_service.get_users_count_last_seven_days(
+            session=session,
+            seven_days_ago=seven_days_ago,
+        )
+
+    return users_db
 
 
 async def create_user(
