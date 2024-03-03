@@ -46,16 +46,16 @@ async def get_users(
             page=pagination.page,
             per_page=pagination.per_page,
         )
-        total_projects = await database_service.get_user_count(session)
+        total_users = await database_service.get_user_count(session)
 
-    total_pages = -(total_projects // -pagination.per_page)
+    total_pages = -(total_users // -pagination.per_page)
     users = [UserResponse.model_validate(user_db) for user_db in users_db]
 
     return UserListResponse(
         data=users,
         page=pagination.page,
         per_page=pagination.per_page,
-        total_items=total_projects,
+        total_items=total_users,
         total_pages=total_pages,
     )
 
@@ -81,7 +81,45 @@ async def get_users_count_last_seven_days(
             seven_days_ago=seven_days_ago,
         )
 
+
     return users_db
+
+
+async def get_users_top_five_longest(
+    request: fastapi.Request,
+    pagination: Pagination = fastapi.Depends(pagination),
+) -> UserListResponse:
+    """
+    Get a paginated list of the top five users with the longest registration dates.
+
+    Args:
+        request: The FastAPI request object.
+        pagination: An optional pagination object. Defaults to the global pagination settings.
+
+    Returns:
+        A `UserListResponse` object containing a list of the top five users with the longest registration dates,
+        as well as pagination metadata.
+    """
+    database_service: database.Service = request.app.service.database
+
+    async with database_service.transaction() as session:
+        users_db = await database_service.get_users_top_five_longest(
+            session=session,
+            page=pagination.page,
+            per_page=pagination.per_page,
+        )
+        total_users = await database_service.get_user_count(session)
+
+    total_pages = -(total_users // -pagination.per_page)
+    users = [UserResponse.model_validate(user_db) for user_db in users_db]
+
+    return UserListResponse(
+        data=users,
+        page=pagination.page,
+        per_page=pagination.per_page,
+        total_items=total_users,
+        total_pages=total_pages,
+    )
 
 
 async def create_user(

@@ -137,6 +137,34 @@ class Service(BaseDatabaseService):
 
         return user_count
 
+    async def get_users_top_five_longest(
+            self,
+            session: AsyncSession,
+            page: int = 1,
+            per_page: int = 5,
+    ) -> list[User]:
+        """
+        Get a paginated list of the top five users with the longest usernames.
+
+        Args:
+            session: The SQLAlchemy session object.
+            page: The page number to retrieve. Defaults to 1.
+            per_page: The number of users to retrieve per page. Defaults to 5.
+
+        Returns:
+            A list of `User` objects representing the top five users with the longest usernames,
+            ordered by username length in descending order.
+        """
+        query = (
+            select(User)
+            .order_by(func.length(User.username).desc())
+        )
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
+        result = await session.execute(query)
+
+        return list(result.unique().scalars().all())
+
     async def update_user(
             self,
             session: AsyncSession,
