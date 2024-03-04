@@ -1,13 +1,12 @@
 import fastapi
+import pandas as pd
+from joblib import dump, load
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 
 from app.common.api.exceptions import HTTPNotFound
 from app.users import database
 from app.users.database.models import User
-
-import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from joblib import dump, load
 
 """
 Create a Random Forest Classifier model to predict user activity in the next month.

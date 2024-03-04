@@ -2,7 +2,7 @@ import pathlib
 from typing import Type
 
 from pydantic import EmailStr
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.common.database.service import BaseDatabaseService

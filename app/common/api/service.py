@@ -1,8 +1,8 @@
 import fastapi
 import uvicorn
 from facet import ServiceMixin
-from loguru import logger
 from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
 
 from .uvicorn_server import UvicornServer
 

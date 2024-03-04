@@ -16,6 +16,7 @@ from . import database
 from .service import get_service
 from .settings import Settings
 
+
 @logger.catch
 def run(ctx: typer.Context):
     """

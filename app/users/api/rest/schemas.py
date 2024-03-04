@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, EmailStr
+
 from app.users.database.models import User
 
 

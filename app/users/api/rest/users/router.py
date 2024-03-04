@@ -1,4 +1,5 @@
 import fastapi
+
 from . import handlers
 
 router = fastapi.APIRouter()

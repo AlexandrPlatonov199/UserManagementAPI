@@ -1,6 +1,6 @@
-from pydantic import BaseModel, constr, EmailStr
-from app.common.api.schemas.paginated import PaginatedResponse
+from pydantic import BaseModel, EmailStr, constr
 
+from app.common.api.schemas.paginated import PaginatedResponse
 from app.users.api.rest.schemas import UserResponse
 
 

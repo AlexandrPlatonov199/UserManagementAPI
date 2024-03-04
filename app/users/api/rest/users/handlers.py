@@ -8,7 +8,7 @@ from app.users.api.rest.schemas import UserResponse
 from app.users.database.models import User
 
 from .dependencies import get_path_user, predict_user_activity
-from .schemas import UserUpdateRequest, UserCreateRequest, UserListResponse
+from .schemas import UserCreateRequest, UserListResponse, UserUpdateRequest
 
 
 async def get_user(
