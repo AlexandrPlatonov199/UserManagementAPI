@@ -7,7 +7,7 @@ from app.users import database
 from app.users.api.rest.schemas import UserResponse
 from app.users.database.models import User
 
-from .dependencies import get_path_user
+from .dependencies import get_path_user, predict_user_activity
 from .schemas import UserUpdateRequest, UserCreateRequest, UserListResponse
 
 
@@ -22,7 +22,15 @@ async def get_user(
     Returns:
         A `UserResponse` object with the user's data.
     """
-    return UserResponse.from_db_model(user)
+    activity_probability = await predict_user_activity(user)
+    return UserResponse(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        updated_registration_date=user.updated_registration_date,
+        registration_date=user.registration_date,
+        activity_probability=activity_probability
+    )
 
 
 async def get_users(
