@@ -57,7 +57,12 @@ async def get_users(
         total_users = await database_service.get_user_count(session)
 
     total_pages = -(total_users // -pagination.per_page)
-    users = [UserResponse.model_validate(user_db) for user_db in users_db]
+    users = [UserResponse(id=user_db.id,
+                          username=user_db.username,
+                          email=user_db.email,
+                          registration_date=user_db.registration_date,
+                          updated_registration_date=user_db.updated_registration_date,
+                          activity_probability=None) for user_db in users_db]
 
     return UserListResponse(
         data=users,
@@ -88,7 +93,6 @@ async def get_users_count_last_seven_days(
             session=session,
             seven_days_ago=seven_days_ago,
         )
-
 
     return users_db
 

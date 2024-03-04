@@ -20,7 +20,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     updated_registration_date: datetime
     registration_date: datetime
-    activity_probability: float | None
+    activity_probability: float | None = None
 
     @classmethod
     def from_db_model(cls, user: User) -> "UserResponse":
@@ -38,4 +38,5 @@ class UserResponse(BaseModel):
             email=user.email,
             registration_date=user.registration_date,
             updated_registration_date=user.updated_registration_date,
+            activity_probability=None
         )
