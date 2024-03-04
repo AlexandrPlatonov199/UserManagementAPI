@@ -163,7 +163,7 @@ class Service(BaseDatabaseService):
         query = query.limit(per_page).offset(offset)
         result = await session.execute(query)
 
-        return list(result.unique().scalars().all())\
+        return list(result.unique().scalars().all())
 
 
     async def get_email_domain_ratio(

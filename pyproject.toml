@@ -23,6 +23,11 @@ pydantic = {version = "^2.5.1", extras = ["email"]}
 [tool.poetry.extras]
 sqlite = ["aiosqlite"]
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+pytest-asyncio = "^0.21.1"
+pytest-dependency = "^0.5.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
