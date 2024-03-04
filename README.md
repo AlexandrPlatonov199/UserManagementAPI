@@ -24,7 +24,7 @@ git clone https://github.com/AlexandrPlatonov199/test.git
 
 Create and activate a virtual environment:
 ```shell
-python3 -m venv .venv
+python -m venv .venv
 
 .venv\Scripts\activate - для Windows;
 
