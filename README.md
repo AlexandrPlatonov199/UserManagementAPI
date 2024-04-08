@@ -19,7 +19,7 @@ This project is a simple API created using FastAPI that works with an SQLite dat
 ## Installation
 Clone the repository:
 ```shell
-git clone https://github.com/AlexandrPlatonov199/test.git
+git clone https://github.com/AlexandrPlatonov199/UserManagementAPI.git
 ```
 
 Create and activate a virtual environment:
